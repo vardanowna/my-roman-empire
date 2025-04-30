@@ -8,15 +8,16 @@ public class Program
     
     public static void Main(string[] args)
     {
-        System.Console.WriteLine("тудусы приветствуют тебя...");
+        Console.WriteLine("тудусы приветствуют тебя...");
+        Console.WriteLine("если нужна помощь, скажи help...");
         int id = 0;
 
         while (true)
         {
-            System.Console.WriteLine("как поступим с очередным тудусом?....");
+            Console.WriteLine("как поступим с очередным тудусом?....");
             var command = System.Console.ReadLine();
 
-            if(command == "new")
+            if(command == "create")
             {
                 // делай добавление
                 Console.WriteLine("как назовём засранца?");
@@ -29,18 +30,20 @@ public class Program
             else if(command == "burn")
             {
                 Console.WriteLine("чей настал черёд?");
-                var id = Console.ReadLine();
-                _todos.RemoveAt(id);
+                var input = Console.ReadLine();
+                _todos.Remove(_todos.Single(x => x.Name == input));
                 Console.WriteLine("прощай, брат...");
             }
             else if(command == "edit")
             {
                 Console.WriteLine("время переименовать тудус");
                 Console.WriteLine("чей настал черёд?");
-                var id = Console.ReadLine();
+                //var id = Console.ReadLine();
                 var name = Console.ReadLine();
+                Console.WriteLine("как его теперь назовём??");
+                var new_name = Console.ReadLine();
                 // обратиться к тудусу и сделать set нового имени?
-                Console.WriteLine("прощай, брат...");
+                _todos.Single(x => x.Name == name).Name = new_name.ToString();
             }
             else if(command == "all")
             {
@@ -54,6 +57,22 @@ public class Program
                 var id = Console.ReadLine();
                 // обратиться к тудусу, сделать get его имени и вывести
             }
+            else if(command == "f")
+            {
+                break;
+            }
+            else if(command == "help")
+            {
+                Console.WriteLine(@"
+                help - просмотреть список команд
+                create - создать тудус
+                burn - стереть тудус с лица земли
+                edit - изменить тудус
+                all - просмотреть все тудусы
+                get - просмотреть конкретный тудус
+                f - покинуть матрицу
+                ");
+            }
             else
             {
                 Console.WriteLine("я не понимаю тебя, брат...");
@@ -62,3 +81,13 @@ public class Program
     }
 }
 
+enum Operation
+{
+    Help = 0,
+    Create = 1,
+    Get = 2,
+    Edit = 3,
+    Burn = 4,
+    All = 5,
+    F = 6,
+}
