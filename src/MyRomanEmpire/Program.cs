@@ -4,17 +4,21 @@ namespace MyRomanEmpire;
 
 public class Program
 {
-    private readonly List<Todo> _todos = new List<Todo>();
+    private static readonly List<Todo> _todos = new List<Todo>();
     
     public static void Main(string[] args)
     {
+        // var ToDoOne = new Todo(1, "one");
+        // ToDoOne.DoSMTH(); // non-static
+        // Todo.AnothertDoSMTH(); // static
+        
         Console.WriteLine("тудусы приветствуют тебя...");
         Console.WriteLine("если нужна помощь, скажи help...");
         int id = 0;
 
         while (true)
         {
-            Console.WriteLine("как поступим с очередным тудусом?....");
+            Console.WriteLine("что дальше?....");
             var command = System.Console.ReadLine();
 
             if(command == "create")
@@ -23,29 +27,29 @@ public class Program
                 Console.WriteLine("как назовём засранца?");
                 var name = Console.ReadLine();
                 var todo = new Todo(id, name); //ToDO: проверка на пустой ввод и на неуникальное имя
-                id += 1;
                 Console.WriteLine($"да прибудет с нами новый тудус: {id} {name}...");
                 _todos.Add(todo);
+                id += 1;
             }
             else if(command == "burn")
             {
                 Console.WriteLine("чей настал черёд?");
-                var input = Console.ReadLine();
-                _todos.Remove(_todos.Single(x => x.Name == input));
+                int.TryParse(Console.ReadLine(), out var currentId);
+                _todos.Remove(_todos.Single(x => x.Id == currentId)); //ToDo: пересчитать id или взять из параллельного списка и смапить
                 Console.WriteLine("прощай, брат...");
             }
             else if(command == "edit")
             {
                 Console.WriteLine("время переименовать тудус");
                 Console.WriteLine("чей настал черёд?");
-                //var id = Console.ReadLine();
-                var name = Console.ReadLine();
+                int.TryParse(Console.ReadLine(), out var currentId);
+                //var name = Console.ReadLine();
                 Console.WriteLine("как его теперь назовём??");
                 var new_name = Console.ReadLine();
                 // обратиться к тудусу и сделать set нового имени?
-                _todos.Single(x => x.Name == name).Name = new_name.ToString();
+                _todos.Single(x => x.Id == currentId).Name = new_name.ToString();
             }
-            else if(command == "all")
+            else if(command == "all") // ToDo: проверка на пустоту
             {
                 foreach (var todo in _todos)
                     Console.WriteLine(todo);
@@ -54,14 +58,15 @@ public class Program
             else if(command == "get")
             {
                 Console.WriteLine("чей настал черёд?");
-                var id = Console.ReadLine();
-                // обратиться к тудусу, сделать get его имени и вывести
+                int.TryParse(Console.ReadLine(), out var currentId);
+                Console.WriteLine(_todos.Single(x => x.Id == currentId));
             }
             else if(command == "f")
             {
+                Console.WriteLine("R.I.P.");
                 break;
             }
-            else if(command == "help")
+            else if(command?.Equals(Operation.Help.ToString(), StringComparison.InvariantCultureIgnoreCase)??false)
             {
                 Console.WriteLine(@"
                 help - просмотреть список команд
