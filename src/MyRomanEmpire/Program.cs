@@ -55,8 +55,7 @@ public class Program // слой представления
             }
             else if(command == "all") // ToDo: проверка на пустоту
             {
-                foreach (var todo in _todos)
-                    Console.WriteLine(todo);
+                Console.WriteLine(repository.All());
                 Console.WriteLine("тудусов много не бывает...");
             }
             else if(command == "get")

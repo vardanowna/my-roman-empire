@@ -6,7 +6,6 @@ public class TodoRepository
 {
     private readonly List<Todo> _todos = new List<Todo>();
     private int id = 0;
-    public int TodosLen = _todos.Count;
 
     // Create name => id
     public int Create(Todo todo)
@@ -18,17 +17,16 @@ public class TodoRepository
     }
 
     // Get id => Todo or null
-    public Todo Get(int searchId)
+    public Todo? Get(int searchId)
     {
         var searchResultTodo = _todos.SingleOrDefault(x => x.Id == searchId);
+        
         if (searchResultTodo == null)
         {
             Console.WriteLine("хьюстон, у нас нулл");
         }
-        else
-        {
-            return searchResultTodo;
-        }
+
+        return searchResultTodo;
     }
     
     // Edit id, name => можно void, можно success or fail
@@ -58,5 +56,10 @@ public class TodoRepository
         {
             return "не получилося";
         }
+    }
+    
+    public IReadOnlyCollection<Todo> All()
+    {
+        return _todos.AsReadOnly();
     }
 }
