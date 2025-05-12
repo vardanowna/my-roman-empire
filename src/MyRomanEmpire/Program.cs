@@ -1,53 +1,57 @@
 ﻿using MyRomanEmpire.Models;
+using MyRomanEmpire.Repositories;
 
 namespace MyRomanEmpire;
 
-public class Program
+public class Program // слой представления
 {
-    private static readonly List<Todo> _todos = new List<Todo>();
+    private static readonly TodoRepository repository = new TodoRepository();
     
     public static void Main(string[] args)
     {
-        // var ToDoOne = new Todo(1, "one");
-        // ToDoOne.DoSMTH(); // non-static
-        // Todo.AnothertDoSMTH(); // static
-        
         Console.WriteLine("тудусы приветствуют тебя...");
         Console.WriteLine("если нужна помощь, скажи help...");
-        int id = 0;
-
+        
         while (true)
         {
             Console.WriteLine("что дальше?....");
-            var command = System.Console.ReadLine();
+            var input = Console.ReadLine(); // ToDo: добавить проверку на пустую строку
+            var splitedInput = input.Split(" "); // ToDo: проверка на null
+
+            var command = splitedInput[0]; // ToDo: добавить проверку на пустоту //ToDo: добвить проверку на argument out of range
+            var parameters = splitedInput[1]; // ToDo: добавить проверку на пустоту //ToDo: добвить проверку наargument out of range
+            
+            Console.WriteLine("Цвет текста");
+            Console.ResetColor();
 
             if(command == "create")
             {
-                // делай добавление
                 Console.WriteLine("как назовём засранца?");
                 var name = Console.ReadLine();
-                var todo = new Todo(id, name); //ToDO: проверка на пустой ввод и на неуникальное имя
-                Console.WriteLine($"да прибудет с нами новый тудус: {id} {name}...");
-                _todos.Add(todo);
-                id += 1;
+                var todo = new Todo(name); //ToDO: проверка на пустой ввод и на неуникальное имя
+                repository.Create(todo);
+                Console.WriteLine($"да прибудет с нами новый тудус: {todo.Id} {todo.Name}...");
+                
             }
             else if(command == "burn")
             {
                 Console.WriteLine("чей настал черёд?");
                 int.TryParse(Console.ReadLine(), out var currentId);
-                _todos.Remove(_todos.Single(x => x.Id == currentId)); //ToDo: пересчитать id или взять из параллельного списка и смапить
+                repository.Burn(currentId); //ToDo: пересчитать id или взять из параллельного списка и смапить
+                                                                                // ToDo: добавить обработку нуллового id
                 Console.WriteLine("прощай, брат...");
             }
             else if(command == "edit")
             {
                 Console.WriteLine("время переименовать тудус");
                 Console.WriteLine("чей настал черёд?");
-                int.TryParse(Console.ReadLine(), out var currentId);
+                int.TryParse(Console.ReadLine(), out var currentId); 
                 //var name = Console.ReadLine();
                 Console.WriteLine("как его теперь назовём??");
-                var new_name = Console.ReadLine();
+                var editedName = Console.ReadLine();
                 // обратиться к тудусу и сделать set нового имени?
-                _todos.Single(x => x.Id == currentId).Name = new_name.ToString();
+                repository.Edit(currentId, editedName); // ToDo: добавить обработку нуллового id
+                //ToDo: добвить проверку наargument out of range
             }
             else if(command == "all") // ToDo: проверка на пустоту
             {
@@ -59,7 +63,15 @@ public class Program
             {
                 Console.WriteLine("чей настал черёд?");
                 int.TryParse(Console.ReadLine(), out var currentId);
-                Console.WriteLine(_todos.Single(x => x.Id == currentId));
+                var currentTodo = repository.Get(currentId);
+                if (currentTodo == null)
+                {
+                    Console.WriteLine("ну ты и дурачок, конечно");
+                }
+                else
+                {
+                    Console.WriteLine(currentTodo);
+                }
             }
             else if(command == "f")
             {
