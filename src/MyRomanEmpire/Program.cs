@@ -19,10 +19,10 @@ public class Program // слой представления
             var splitedInput = input.Split(" "); // ToDo: проверка на null
 
             var command = splitedInput[0]; // ToDo: добавить проверку на пустоту //ToDo: добвить проверку на argument out of range
-            var parameters = splitedInput[1]; // ToDo: добавить проверку на пустоту //ToDo: добвить проверку наargument out of range
+            //var parameters = splitedInput[1]; // ToDo: добавить проверку на пустоту //ToDo: добвить проверку наargument out of range
             
-            Console.WriteLine("Цвет текста");
-            Console.ResetColor();
+            //Console.WriteLine("Цвет текста");
+            //Console.ResetColor();
 
             if(command == "create")
             {
@@ -55,7 +55,11 @@ public class Program // слой представления
             }
             else if(command == "all") // ToDo: проверка на пустоту
             {
-                Console.WriteLine(repository.All());
+                //Console.WriteLine(repository.All());
+                foreach (Todo todo in repository.All())
+                {
+                    Console.WriteLine(todo);
+                }
                 Console.WriteLine("тудусов много не бывает...");
             }
             else if(command == "get")
