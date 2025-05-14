@@ -33,6 +33,20 @@ public class Program // слой представления
                 Console.WriteLine($"да прибудет с нами новый тудус: {todo.Id} {todo.Name}...");
                 
             }
+            else if(command == "mark")
+            {
+                Console.WriteLine("тудус свершился!");
+                Console.WriteLine("а какой?");
+                int.TryParse(Console.ReadLine(), out var currentId); 
+                repository.Done(currentId);
+            }
+            else if(command == "unmark")
+            {
+                Console.WriteLine("тудус не свершился!");
+                Console.WriteLine("а какой?");
+                int.TryParse(Console.ReadLine(), out var currentId); 
+                repository.Undone(currentId);
+            }
             else if(command == "burn")
             {
                 Console.WriteLine("чей настал черёд?");
@@ -58,7 +72,10 @@ public class Program // слой представления
                 //Console.WriteLine(repository.All());
                 foreach (Todo todo in repository.All())
                 {
-                    Console.WriteLine(todo);
+                    if (todo.Status != 1)
+                    {
+                        Console.WriteLine(todo);
+                    }
                 }
                 Console.WriteLine("тудусов много не бывает...");
             }
@@ -86,6 +103,8 @@ public class Program // слой представления
                 Console.WriteLine(@"
                 help - просмотреть список команд
                 create - создать тудус
+                mark - отметить сделанным
+                unmark - отметить несделанным
                 burn - стереть тудус с лица земли
                 edit - изменить тудус
                 all - просмотреть все тудусы

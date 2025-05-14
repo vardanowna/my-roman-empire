@@ -57,7 +57,17 @@ public class TodoRepository
             return "не получилося";
         }
     }
+
+    public void Done(int searchId)
+    {
+        _todos.Single(x => x.Id == searchId).Status = 1;
+    }
     
+    public void Undone(int searchId)
+    {
+        _todos.Single(x => x.Id == searchId).Status = 0;
+    }
+
     public IReadOnlyCollection<Todo> All()
     {
         return _todos.AsReadOnly();
