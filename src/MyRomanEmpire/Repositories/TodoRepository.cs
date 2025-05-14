@@ -60,12 +60,12 @@ public class TodoRepository
 
     public void Done(int searchId)
     {
-        _todos.Single(x => x.Id == searchId).Status = 1;
+        _todos.Single(x => x.Id == searchId).Status = State.Completed;
     }
     
     public void Undone(int searchId)
     {
-        _todos.Single(x => x.Id == searchId).Status = 0;
+        _todos.Single(x => x.Id == searchId).Status = State.New;
     }
 
     public IReadOnlyCollection<Todo> All()

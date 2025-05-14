@@ -18,7 +18,7 @@ public class Todo
     {
         Id = 0;
         Name = name;
-        Status = State.Completed;
+        Status = State.New;
     }
 
     public override string ToString()
@@ -27,7 +27,7 @@ public class Todo
     }
 }
 
-enum State
+public enum State
 {
     New = 0,
     Completed = 1,

@@ -72,7 +72,7 @@ public class Program // слой представления
                 //Console.WriteLine(repository.All());
                 foreach (Todo todo in repository.All())
                 {
-                    if (todo.Status != 1)
+                    if (todo.Status != State.Completed)
                     {
                         Console.WriteLine(todo);
                     }
