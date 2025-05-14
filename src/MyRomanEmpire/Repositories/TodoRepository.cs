@@ -73,3 +73,9 @@ public class TodoRepository
         return _todos.AsReadOnly();
     }
 }
+
+enum State
+{
+    New = 0,
+    Completed = 1,
+}
