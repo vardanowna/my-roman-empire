@@ -74,8 +74,3 @@ public class TodoRepository
     }
 }
 
-enum State
-{
-    New = 0,
-    Completed = 1,
-}

@@ -5,24 +5,30 @@ public class Todo
     public int Id { get; set; }
     public string Name { get; set; }
 
-    public int Status { get; set; }
+    public State Status { get; set; }
 
     public Todo(int id, string name)
     {
         Id = id;
         Name = name;
-        Status = 0;
+        Status = State.New;
     }
     
     public Todo(string name)
     {
         Id = 0;
         Name = name;
-        Status = 0;
+        Status = State.Completed;
     }
 
     public override string ToString()
     {
         return $"{Id} - {Name}";
     }
+}
+
+enum State
+{
+    New = 0,
+    Completed = 1,
 }
