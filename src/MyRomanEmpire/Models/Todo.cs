@@ -7,6 +7,11 @@ public class Todo
 
     public State Status { get; set; }
 
+    // public void Get()
+    // {
+    //     
+    // }
+
     public Todo(int id, string name)
     {
         Id = id;

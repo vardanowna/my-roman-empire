@@ -30,7 +30,7 @@ public class Program // слой представления
                 var name = Console.ReadLine();
                 var todo = new Todo(name); //ToDO: проверка на пустой ввод и на неуникальное имя
                 repository.Create(todo);
-                Console.WriteLine($"да прибудет с нами новый тудус: {todo.Id} {todo.Name}...");
+                Console.WriteLine($"да прибудет с нами новый тудус: {todo.Name}...");
                 
             }
             else if(command == "mark")
@@ -93,6 +93,10 @@ public class Program // слой представления
                     Console.WriteLine(currentTodo);
                 }
             }
+            else if(command == "save")
+            {
+                repository.Save();
+            }
             else if(command == "f")
             {
                 Console.WriteLine("R.I.P.");
@@ -109,6 +113,7 @@ public class Program // слой представления
                 edit - изменить тудус
                 all - просмотреть все тудусы
                 get - просмотреть конкретный тудус
+                save - записать тудусы в файл 
                 f - покинуть матрицу
                 ");
             }

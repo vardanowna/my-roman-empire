@@ -1,11 +1,15 @@
-﻿using MyRomanEmpire.Models;
+﻿using System.Globalization;
+using System.Text;
+using MyRomanEmpire.Models;
 
 namespace MyRomanEmpire.Repositories;
 
 public class TodoRepository
 {
     private readonly List<Todo> _todos = new List<Todo>();
-    private int id = 0;
+    private int id = 1;
+    public string localPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\";
+    string localDate = DateTime.Now.ToString(new CultureInfo("en-GB")).Replace(" ", "_").Replace(":", "_").Replace("\\", "_");
 
     // Create name => id
     public int Create(Todo todo)
@@ -71,6 +75,24 @@ public class TodoRepository
     public IReadOnlyCollection<Todo> All()
     {
         return _todos.AsReadOnly();
+    }
+    public async void Save()
+    {
+        string fileName = "list_of_todos_" + localDate + ".txt";
+        string fullPath = localPath + fileName;
+
+        await using (var fs = File.Create(fullPath))
+        {
+            
+        }
+
+        await using (StreamWriter writer = new StreamWriter(fullPath, true))
+        {
+            foreach (Todo todo in _todos)
+            {
+                await writer.WriteLineAsync(todo.ToString());
+            }
+        }
     }
 }
 
