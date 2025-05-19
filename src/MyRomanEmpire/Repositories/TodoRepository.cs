@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using System.IO;
 using MyRomanEmpire.Models;
 
 namespace MyRomanEmpire.Repositories;
@@ -8,8 +9,17 @@ public class TodoRepository
 {
     private readonly List<Todo> _todos = new List<Todo>();
     private int id = 1;
-    public string localPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\";
-    string localDate = DateTime.Now.ToString(new CultureInfo("en-GB")).Replace(" ", "_").Replace(":", "_").Replace("/", "_");
+    public string localPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\list_of_todos.txt";
+    //string localDate = DateTime.Now.ToString(new CultureInfo("en-GB")).Replace(" ", "_").Replace(":", "_").Replace("/", "_");
+    
+
+    public void Init()
+    {
+        if (File.Exists(localPath))
+        {
+            File.Create(localPath).Close();
+        }
+    }
 
     // Create name => id
     public int Create(Todo todo)
@@ -78,18 +88,23 @@ public class TodoRepository
     }
     public async void Save()
     {
-        string fileName = "list_of_todos_" + localDate + ".txt";
-        string fullPath = localPath + fileName;
+        //string fileName = "list_of_todos_" + localDate + ".txt";
+        //string fullPath = localPath + fileName;
+        await File.WriteAllTextAsync(localPath, "");
 
-        File.Create(fullPath).Close();
-
-        await using (StreamWriter writer = new StreamWriter(fullPath, true))
+        await using (StreamWriter writer = new StreamWriter(localPath, true))
         {
             foreach (Todo todo in _todos)
             {
                 await writer.WriteLineAsync(todo.ToString());
             }
+            Console.WriteLine("ура! теперь твои тудусы живут в файле!");
         }
+    }
+    
+    public async void Print()
+    {
+        Console.WriteLine("Under reconstruction...");
     }
 }
 

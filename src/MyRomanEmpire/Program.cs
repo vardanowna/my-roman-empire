@@ -9,6 +9,8 @@ public class Program // слой представления
     
     public static void Main(string[] args)
     {
+        repository.Init();
+        
         Console.WriteLine("тудусы приветствуют тебя...");
         Console.WriteLine("если нужна помощь, скажи help...");
         
@@ -97,6 +99,10 @@ public class Program // слой представления
             {
                 repository.Save();
             }
+            else if(command == "save")
+            {
+                repository.Print();
+            }
             else if(command == "f")
             {
                 Console.WriteLine("R.I.P.");
@@ -114,6 +120,7 @@ public class Program // слой представления
                 all - просмотреть все тудусы
                 get - просмотреть конкретный тудус
                 save - записать тудусы в файл 
+                print - скачать тудусы как пдф
                 f - покинуть матрицу
                 ");
             }
