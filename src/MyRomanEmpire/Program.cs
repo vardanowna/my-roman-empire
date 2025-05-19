@@ -99,9 +99,15 @@ public class Program // слой представления
             {
                 repository.Save();
             }
-            else if(command == "save")
+            else if(command == "export")
             {
-                repository.Print();
+                repository.Export();
+            }
+            else if(command == "import")
+            {
+                Console.WriteLine("укажи путь к файлу для загрузки");
+                string path = Console.ReadLine(); 
+                repository.Import(path);
             }
             else if(command == "f")
             {
@@ -112,6 +118,7 @@ public class Program // слой представления
             {
                 Console.WriteLine(@"
                 help - просмотреть список команд
+                import - загрузить тудусы из файла
                 create - создать тудус
                 mark - отметить сделанным
                 unmark - отметить несделанным
@@ -120,7 +127,7 @@ public class Program // слой представления
                 all - просмотреть все тудусы
                 get - просмотреть конкретный тудус
                 save - записать тудусы в файл 
-                print - скачать тудусы как пдф
+                export - скачать тудусы как пдф
                 f - покинуть матрицу
                 ");
             }

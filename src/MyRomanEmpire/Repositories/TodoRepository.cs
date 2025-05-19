@@ -11,6 +11,7 @@ public class TodoRepository
     private int id = 1;
     public string localPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\list_of_todos.txt";
     //string localDate = DateTime.Now.ToString(new CultureInfo("en-GB")).Replace(" ", "_").Replace(":", "_").Replace("/", "_");
+    // public string debugPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\test.txt";
     
 
     public void Init()
@@ -102,7 +103,28 @@ public class TodoRepository
         }
     }
     
-    public async void Print()
+    public async void Import(string path)
+    {
+        id = 0;
+        _todos.Clear();
+        
+        await File.WriteAllTextAsync(localPath, "");
+        string[] lines = await File.ReadAllLinesAsync(path);
+        
+        foreach (string line in lines)
+        {
+            int spaceIndex = line.IndexOf(' ');
+            int importLineId = Convert.ToInt32(line[..(spaceIndex-1)]);
+            string importLineName = line[(spaceIndex + 1)..line.Length];
+            Todo todo = new Todo(importLineId, importLineName);
+            _todos.Add(todo);
+            await File.AppendAllTextAsync(localPath, todo +"\n");
+            id += 1;
+        }
+        Console.WriteLine("ура! тудусы из файла загружены!");
+    }
+    
+    public async void Export()
     {
         Console.WriteLine("Under reconstruction...");
     }
