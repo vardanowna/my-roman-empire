@@ -16,7 +16,7 @@ public class TodoRepository
 
     public void Init()
     {
-        if (File.Exists(localPath))
+        if (!File.Exists(localPath))
         {
             File.Create(localPath).Close();
         }
@@ -114,14 +114,13 @@ public class TodoRepository
         foreach (string line in lines)
         {
             int spaceIndex = line.IndexOf(' ');
-            int importLineId = Convert.ToInt32(line[..(spaceIndex-1)]);
-            string importLineName = line[(spaceIndex + 1)..line.Length];
+            int importLineId = Convert.ToInt32(line[..(spaceIndex)]);
+            string importLineName = line[(spaceIndex + 3)..line.Length];
             Todo todo = new Todo(importLineId, importLineName);
             _todos.Add(todo);
             await File.AppendAllTextAsync(localPath, todo +"\n");
             id += 1;
         }
-        Console.WriteLine("ура! тудусы из файла загружены!");
     }
     
     public async void Export()

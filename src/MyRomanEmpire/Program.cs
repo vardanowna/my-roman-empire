@@ -10,6 +10,7 @@ public class Program // слой представления
     public static void Main(string[] args)
     {
         repository.Init();
+        repository.Import(repository.localPath);
         
         Console.WriteLine("тудусы приветствуют тебя...");
         Console.WriteLine("если нужна помощь, скажи help...");
@@ -108,6 +109,7 @@ public class Program // слой представления
                 Console.WriteLine("укажи путь к файлу для загрузки");
                 string path = Console.ReadLine(); 
                 repository.Import(path);
+                Console.WriteLine("ура! тудусы из файла загружены!");
             }
             else if(command == "f")
             {
