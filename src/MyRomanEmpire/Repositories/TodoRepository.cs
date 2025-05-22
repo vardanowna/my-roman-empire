@@ -10,7 +10,7 @@ public class TodoRepository
     private readonly List<Todo> _todos = new List<Todo>();
     private int id = 1;
     public string localPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\list_of_todos.txt";
-    //string localDate = DateTime.Now.ToString(new CultureInfo("en-GB")).Replace(" ", "_").Replace(":", "_").Replace("/", "_");
+    string localDate = DateTime.Now.ToString(new CultureInfo("en-GB")).Replace(" ", "_").Replace(":", "_").Replace("/", "_");
     // public string debugPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\test.txt";
     
 
@@ -89,11 +89,11 @@ public class TodoRepository
     }
     public async void Save()
     {
-        //string fileName = "list_of_todos_" + localDate + ".txt";
-        //string fullPath = localPath + fileName;
-        await File.WriteAllTextAsync(localPath, "");
+        string fileName = "list_of_todos_" + localDate + ".txt";
+        string fullPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\" + fileName;
+        await File.WriteAllTextAsync(fullPath, "");
 
-        await using (StreamWriter writer = new StreamWriter(localPath, true))
+        await using (StreamWriter writer = new StreamWriter(fullPath, true))
         {
             foreach (Todo todo in _todos)
             {
@@ -105,9 +105,6 @@ public class TodoRepository
     
     public async void Import(string path)
     {
-        id = 0;
-        _todos.Clear();
-        
         await File.WriteAllTextAsync(localPath, "");
         string[] lines = await File.ReadAllLinesAsync(path);
         
@@ -121,6 +118,12 @@ public class TodoRepository
             await File.AppendAllTextAsync(localPath, todo +"\n");
             id += 1;
         }
+    }
+    
+    public void Clear()
+    {
+        id = 0;
+        _todos.Clear();
     }
     
     public async void Export()
