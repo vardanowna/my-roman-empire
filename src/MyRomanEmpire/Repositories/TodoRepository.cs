@@ -120,7 +120,7 @@ public class TodoRepository
         }
     }
     
-    public void Clear()
+    private void Clear()
     {
         id = 0;
         _todos.Clear();
