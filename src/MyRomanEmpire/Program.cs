@@ -99,6 +99,19 @@ public class Program // слой представления
                 }
                 Console.WriteLine("тудусов много не бывает...");
             }
+            else if(command == "search") 
+            {
+               Console.WriteLine("какой тудус ищем?");
+               string searchName = Console.ReadLine(); 
+               repository.Search(searchName);
+            }
+            else if(command == "filter") 
+            {
+                Console.WriteLine($"Существуют следующие статусы: {State.New}, {State.InProgress}, {State.Completed}");
+                Console.WriteLine("на какой статус смотрим?");
+                State.TryParse<State>(Console.ReadLine(), out var filterState); 
+                repository.Filter(filterState);
+            }
             else if(command == "get")
             {
                 Console.WriteLine("чей настал черёд?");

@@ -73,6 +73,23 @@ public class TodoRepository
         }
     }
 
+    public void Search(string searchName)
+    {
+        var searchResultTodo = _todos.SingleOrDefault(x => x.Name == searchName);
+        Console.WriteLine(searchResultTodo); 
+    }
+
+    public void Filter(State state)
+    {
+        foreach (Todo todo in _todos)
+        {
+            if (todo.Status == state)
+            {
+                Console.WriteLine(todo);
+            }
+        }
+    }
+
     public void ToInProgressFromNew(int searchId)
     {
         _todos.Single(x => x.Id == searchId).Status = State.InProgress;
