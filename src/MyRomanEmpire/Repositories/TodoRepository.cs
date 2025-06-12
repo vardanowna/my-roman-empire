@@ -73,12 +73,22 @@ public class TodoRepository
         }
     }
 
+    public void ToInProgressFromNew(int searchId)
+    {
+        _todos.Single(x => x.Id == searchId).Status = State.InProgress;
+    }
+    
     public void Done(int searchId)
     {
         _todos.Single(x => x.Id == searchId).Status = State.Completed;
     }
     
-    public void Undone(int searchId)
+    public void ToInProgressFromDone(int searchId)
+    {
+        _todos.Single(x => x.Id == searchId).Status = State.InProgress;
+    }
+    
+    public void ReOpen(int searchId)
     {
         _todos.Single(x => x.Id == searchId).Status = State.New;
     }
@@ -100,6 +110,21 @@ public class TodoRepository
                 await writer.WriteLineAsync(todo.ToString());
             }
             Console.WriteLine("ура! теперь твои тудусы живут в файле!");
+        }
+    }
+    
+    public async void UpdateFile()
+    {
+        string fileName = "list_of_todos_" + localDate + ".txt";
+        string fullPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\" + fileName;
+        await File.WriteAllTextAsync(fullPath, "");
+
+        await using (StreamWriter writer = new StreamWriter(fullPath, true))
+        {
+            foreach (Todo todo in _todos)
+            {
+                await writer.WriteLineAsync(todo.ToString());
+            }
         }
     }
     

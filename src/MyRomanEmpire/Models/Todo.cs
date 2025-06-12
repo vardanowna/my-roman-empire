@@ -28,12 +28,13 @@ public class Todo
 
     public override string ToString()
     {
-        return $"{Id} - {Name}";
+        return $"{Id} - {Name} - {Status}";
     }
 }
 
 public enum State
 {
     New = 0,
-    Completed = 1,
+    InProgress = 1,
+    Completed = 2,
 }

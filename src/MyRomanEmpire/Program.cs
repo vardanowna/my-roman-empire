@@ -34,21 +34,36 @@ public class Program // слой представления
                 var todo = new Todo(name); //ToDO: проверка на пустой ввод и на неуникальное имя
                 repository.Create(todo);
                 Console.WriteLine($"да прибудет с нами новый тудус: {todo.Name}...");
+                repository.UpdateFile();
                 
             }
-            else if(command == "mark")
+            else if(command == "wip")
             {
-                Console.WriteLine("тудус свершился!");
-                Console.WriteLine("а какой?");
+                Console.WriteLine("какой тудус?");
+                int.TryParse(Console.ReadLine(), out var currentId); 
+                repository.ToInProgressFromNew(currentId);
+                repository.UpdateFile();
+            }
+            else if(command == "done")
+            {
+                Console.WriteLine("какой тудус?");
                 int.TryParse(Console.ReadLine(), out var currentId); 
                 repository.Done(currentId);
+                repository.UpdateFile();
             }
-            else if(command == "unmark")
+            else if(command == "return")
             {
-                Console.WriteLine("тудус не свершился!");
-                Console.WriteLine("а какой?");
+                Console.WriteLine("какой тудус?");
                 int.TryParse(Console.ReadLine(), out var currentId); 
-                repository.Undone(currentId);
+                repository.ToInProgressFromDone(currentId);
+                repository.UpdateFile();
+            }
+            else if(command == "reopen")
+            {
+                Console.WriteLine("какой тудус?");
+                int.TryParse(Console.ReadLine(), out var currentId); 
+                repository.ReOpen(currentId);
+                repository.UpdateFile();
             }
             else if(command == "burn")
             {
@@ -57,6 +72,7 @@ public class Program // слой представления
                 repository.Burn(currentId); //ToDo: пересчитать id или взять из параллельного списка и смапить
                                                                                 // ToDo: добавить обработку нуллового id
                 Console.WriteLine("прощай, брат...");
+                repository.UpdateFile();
             }
             else if(command == "edit")
             {
@@ -69,6 +85,7 @@ public class Program // слой представления
                 // обратиться к тудусу и сделать set нового имени?
                 repository.Edit(currentId, editedName); // ToDo: добавить обработку нуллового id
                 //ToDo: добвить проверку наargument out of range
+                repository.UpdateFile();
             }
             else if(command == "all") // ToDo: проверка на пустоту
             {
@@ -122,8 +139,10 @@ public class Program // слой представления
                 help - просмотреть список команд
                 import - загрузить тудусы из файла
                 create - создать тудус
-                mark - отметить сделанным
-                unmark - отметить несделанным
+                to in progress - толнуть новый тудус в работу
+                done - завершить тудус
+                return to in progress - вернуть завершённый тудус в работу
+                reopen - переоткрыть тудус
                 burn - стереть тудус с лица земли
                 edit - изменить тудус
                 all - просмотреть все тудусы
