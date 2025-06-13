@@ -9,6 +9,15 @@ public class Program // слой представления
     
     public static void Main(string[] args)
     {
+        
+        var builder = WebApplication.CreateBuilder(args);
+        var app = builder.Build();
+
+        app.MapControllers();
+
+        app.Run();
+        
+        /*
         repository.Init();
         repository.Import(repository.localPath);
         
@@ -169,7 +178,7 @@ public class Program // слой представления
             {
                 Console.WriteLine("я не понимаю тебя, брат...");
             }
-        }
+        } */
     }
 }
 
