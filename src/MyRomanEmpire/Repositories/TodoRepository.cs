@@ -105,7 +105,7 @@ public class TodoRepository
         _todos.Single(x => x.Id == searchId).Status = State.InProgress;
     }
     
-    public void ReOpen(int searchId)
+    public void Reopen(int searchId)
     {
         _todos.Single(x => x.Id == searchId).Status = State.New;
     }

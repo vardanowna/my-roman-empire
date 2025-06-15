@@ -5,7 +5,7 @@ namespace MyRomanEmpire;
 
 public class Program // слой представления
 {
-    private static readonly TodoRepository repository = new TodoRepository();
+    //private static readonly TodoRepository repository = new TodoRepository();
     
     public static void Main(string[] args)
     {
