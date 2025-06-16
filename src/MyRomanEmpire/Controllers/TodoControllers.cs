@@ -10,7 +10,7 @@ public class TodoControllers : ControllerBase
 {
     private static readonly TodoRepository repository = new TodoRepository();
 
-    [HttpPost("{create}")]
+    [HttpPost("create")]
     public IActionResult CreateTodo([FromBody] string todosName)
     {
 
