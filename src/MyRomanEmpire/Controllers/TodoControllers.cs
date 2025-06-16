@@ -11,7 +11,7 @@ public class TodoControllers : ControllerBase
     private static readonly TodoRepository repository = new TodoRepository();
 
     [HttpPost("{create}")]
-    public Todo CreateTodo([FromBody] string todosName)
+    public IActionResult CreateTodo([FromBody] string todosName)
     {
 
         var name = todosName;
@@ -19,73 +19,73 @@ public class TodoControllers : ControllerBase
         repository.Create(todo);
         repository.UpdateFile();
 
-        return todo;
+        return Ok();
     }
     
     [HttpPut("to-in-progress/{todosId}")]
-    public Todo ToInProgress([FromBody] string todosId) // может, сразу принимать только int?
+    public IActionResult ToInProgress([FromBody] string todosId) // может, сразу принимать только int?
     {
         int.TryParse(todosId, out var currentId); 
         repository.ToInProgressFromNew(currentId);
         repository.UpdateFile();
 
-        return Ok;
+        return Ok();
     }
     
     [HttpPut("to-done/{todosId}")]
-    public Todo ToDone([FromBody] string todosId)
+    public IActionResult ToDone([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId); 
         repository.Done(currentId);
         repository.UpdateFile();
         
-        return Ok;
+        return Ok();
     }
     
     [HttpPut("return-to-in-progress/{todosId}")]
-    public Todo ReturnToInProgress([FromBody] string todosId)
+    public IActionResult ReturnToInProgress([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId); 
         repository.ToInProgressFromDone(currentId);
         repository.UpdateFile();
 
-        return Ok;
+        return Ok();
     }
     
     [HttpPut("reopen/{todosId}")]
-    public Todo Reopen([FromBody] string todosId)
+    public IActionResult Reopen([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId); 
         repository.Reopen(currentId);
         repository.UpdateFile();
 
-        return Ok;
+        return Ok();
     }
     
     [HttpDelete("burn/{todosId}")]
-    public Todo Burn([FromBody] string todosId)
+    public IActionResult Burn([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId);
         repository.Burn(currentId); //ToDo: пересчитать id или взять из параллельного списка и смапить
         // ToDo: добавить обработку нуллового id
         repository.UpdateFile();
 
-        return Ok;
+        return Ok();
     }
     
     [HttpPut("edit/{todosId}")]
-    public Todo Edit([FromBody] string todosId, string newName)
+    public IActionResult Edit([FromBody] string todosId, string newName)
     {
         int.TryParse(todosId, out var currentId);
         repository.Edit(currentId, newName); // ToDo: добавить обработку нуллового id
         //ToDo: добавить проверку на argument out of range
         repository.UpdateFile();
 
-        return Ok;
+        return Ok();
     }
     
     [HttpGet("all")]
-    public Todo Edit()
+    public IActionResult Edit()
     {
         foreach (Todo todo in repository.All())
         {
@@ -95,64 +95,64 @@ public class TodoControllers : ControllerBase
             }
         }
 
-        return Ok;
+        return Ok();
     }
     
     [HttpGet("search/{todosId}")]
-    public Todo Search([FromQuery] string searchName)
+    public IActionResult Search([FromQuery] string searchName)
     {
         repository.Search(searchName);
 
-        return Ok;
+        return Ok();
     }
     
     [HttpGet("filter/{state}")]
-    public Todo Filter([FromQuery] string state)
+    public IActionResult Filter([FromQuery] string state)
     {
         //Существуют следующие статусы: {State.New}, {State.InProgress}, {State.Completed};
         State.TryParse<State>(state, out var filterState); 
         repository.Filter(filterState);
 
-        return Ok;
+        return Ok();
     }
     
     [HttpGet("get/{todosId}")]
-    public string Get([FromBody] string todosId)
+    public IActionResult Get([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId);
         var currentTodo = repository.Get(currentId);
         if (currentTodo == null)
         {
-            return "ну ты и дурачок, конечно";
+            return BadRequest();
         }
         else
         {
-            return currentTodo.ToString();
+            return Ok();
         }
     }
     
     [HttpPut("save")]
-    public Todo Save()
+    public IActionResult Save()
     {
         repository.Save();
 
-        return Ok;
+        return Ok();
     }
     
     [HttpPut("export")]
-    public Todo Export()
+    public IActionResult Export()
     {
         repository.Export();
         
-        return Ok;
+        return Ok();
     }
     
     [HttpPut("import")]
-    public Todo Import([FromBody] string path)
+    public IActionResult Import([FromBody] string path)
     {
         repository.Import(path);
 
-        return Ok;
+        return Ok();
     }
     
     [HttpGet("f")]
