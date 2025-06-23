@@ -11,17 +11,23 @@ public class Program // слой представления
     {
         
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(opt =>
+        {
+        });
+        
         var app = builder.Build();
 
+        app.UseSwagger();
+        app.UseSwaggerUI(opt =>
+        {
+            opt.SwaggerEndpoint("/swagger/v1/swagger.json", "MyRomanEmpire");
+            opt.RoutePrefix = string.Empty;
+        });
         app.MapControllers();
         
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
         app.Run();
-        
-        app.UseSwagger();
-        app.UseSwaggerUI();
         
         /*
         repository.Init();

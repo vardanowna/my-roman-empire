@@ -22,7 +22,12 @@ public class TodoRepository
         }
     }
 
-    // Create name => id
+    /// <summary>
+    /// Метод по созданию тудуса.
+    /// Create name => id
+    /// </summary>
+    /// <param name="todo">инфо тудус.</param>
+    /// <returns>айдишка тудуса.</returns>
     public int Create(Todo todo)
     {
         todo = new Todo(id, todo.Name);
@@ -73,10 +78,11 @@ public class TodoRepository
         }
     }
 
-    public void Search(string searchName)
+    public Todo? Search(string searchName)
     {
         var searchResultTodo = _todos.SingleOrDefault(x => x.Name == searchName);
-        Console.WriteLine(searchResultTodo); 
+        Console.WriteLine(searchResultTodo);
+        return searchResultTodo;
     }
 
     public void Filter(State state)
