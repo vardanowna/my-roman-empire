@@ -14,8 +14,14 @@ public class Program // слой представления
         var app = builder.Build();
 
         app.MapControllers();
+        
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         app.Run();
+        
+        app.UseSwagger();
+        app.UseSwaggerUI();
         
         /*
         repository.Init();
