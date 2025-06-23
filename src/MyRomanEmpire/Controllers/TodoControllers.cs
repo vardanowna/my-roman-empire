@@ -10,14 +10,21 @@ namespace MyRomanEmpire.Controllers;
 [Route("api/todos")]
 public class TodoControllers : ControllerBase
 {
-    private static readonly TodoRepository repository = new TodoRepository();
+    private readonly ITodoRepository _repository;
+    
+    public TodoControllers(ITodoRepository repository)
+    {
+        _repository = repository;
+    }
+    
+    // private static readonly ITodoRepository repository = TodoRepositoryFactory.GetRepo(DateTime.Now.DayOfWeek);
 
     [HttpPost("create")]
     public CreateResponse CreateTodo([FromBody] CreateRequest request)
     {
         var todo = new Todo(request.TodoName); //ToDO: проверка на пустой ввод и на неуникальное имя
-        var id = repository.Create(todo);
-        repository.UpdateFile();
+        var id = _repository.Create(todo);
+        _repository.UpdateFile();
 
         return new CreateResponse()
         {
@@ -29,8 +36,8 @@ public class TodoControllers : ControllerBase
     public IActionResult ToInProgress([FromBody] string todosId) // может, сразу принимать только int?
     {
         int.TryParse(todosId, out var currentId);
-        repository.ToInProgressFromNew(currentId);
-        repository.UpdateFile();
+        _repository.ToInProgressFromNew(currentId);
+        _repository.UpdateFile();
 
         return Ok();
     }
@@ -39,8 +46,8 @@ public class TodoControllers : ControllerBase
     public IActionResult ToDone([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId);
-        repository.Done(currentId);
-        repository.UpdateFile();
+        _repository.Done(currentId);
+        _repository.UpdateFile();
 
         return Ok();
     }
@@ -49,8 +56,8 @@ public class TodoControllers : ControllerBase
     public IActionResult ReturnToInProgress([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId);
-        repository.ToInProgressFromDone(currentId);
-        repository.UpdateFile();
+        _repository.ToInProgressFromDone(currentId);
+        _repository.UpdateFile();
 
         return Ok();
     }
@@ -59,8 +66,8 @@ public class TodoControllers : ControllerBase
     public IActionResult Reopen([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId);
-        repository.Reopen(currentId);
-        repository.UpdateFile();
+        _repository.Reopen(currentId);
+        _repository.UpdateFile();
 
         return Ok();
     }
@@ -69,9 +76,9 @@ public class TodoControllers : ControllerBase
     public IActionResult Burn([FromBody] string todosId)
     {
         int.TryParse(todosId, out var currentId);
-        repository.Burn(currentId); //ToDo: пересчитать id или взять из параллельного списка и смапить
+        _repository.Burn(currentId); //ToDo: пересчитать id или взять из параллельного списка и смапить
         // ToDo: добавить обработку нуллового id
-        repository.UpdateFile();
+        _repository.UpdateFile();
 
         return Ok();
     }
@@ -80,9 +87,9 @@ public class TodoControllers : ControllerBase
     public IActionResult Edit([FromBody] string todosId, string newName)
     {
         int.TryParse(todosId, out var currentId);
-        repository.Edit(currentId, newName); // ToDo: добавить обработку нуллового id
+        _repository.Edit(currentId, newName); // ToDo: добавить обработку нуллового id
         //ToDo: добавить проверку на argument out of range
-        repository.UpdateFile();
+        _repository.UpdateFile();
 
         return Ok();
     }
@@ -100,7 +107,7 @@ public class TodoControllers : ControllerBase
         //             Name = it.Name,
         //         }).ToList()
         // };
-        var todos = repository.All().ToArray();
+        var todos = _repository.All().ToArray();
         var response = new GetAllResponse();
         foreach (var todo in todos)
         {
@@ -116,7 +123,7 @@ public class TodoControllers : ControllerBase
     [HttpGet("search")]
     public Todo? Search([FromQuery] string searchName)
     {
-        var response = repository.Search(searchName);
+        var response = _repository.Search(searchName);
         var res1 = response?.MapToResponse();
 
         var w = new { ASdasd = 124, asdgfdfg = 234534, afsdawrt = "asdfsdafg" };
@@ -129,7 +136,7 @@ public class TodoControllers : ControllerBase
     {
         //Существуют следующие статусы: {State.New}, {State.InProgress}, {State.Completed};
         State.TryParse<State>(state, out var filterState);
-        repository.Filter(filterState);
+        _repository.Filter(filterState);
 
         return Ok();
     }
@@ -138,7 +145,7 @@ public class TodoControllers : ControllerBase
     public IActionResult Get([FromRoute] string todosId)
     {
         int.TryParse(todosId, out var currentId);
-        var currentTodo = repository.Get(currentId);
+        var currentTodo = _repository.Get(currentId);
         if (currentTodo == null)
         {
             return BadRequest();
@@ -152,7 +159,7 @@ public class TodoControllers : ControllerBase
     [HttpPut("save")]
     public IActionResult Save()
     {
-        repository.Save();
+        _repository.Save();
 
         return Ok();
     }
@@ -160,7 +167,7 @@ public class TodoControllers : ControllerBase
     [HttpPut("export")]
     public IActionResult Export()
     {
-        repository.Export();
+        _repository.Export();
 
         return Ok();
     }
@@ -168,7 +175,7 @@ public class TodoControllers : ControllerBase
     [HttpPut("import")]
     public IActionResult Import([FromBody] string path)
     {
-        repository.Import(path);
+        _repository.Import(path);
 
         return Ok();
     }

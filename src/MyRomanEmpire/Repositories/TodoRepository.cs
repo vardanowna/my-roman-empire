@@ -1,11 +1,9 @@
 ﻿using System.Globalization;
-using System.Text;
-using System.IO;
 using MyRomanEmpire.Models;
 
 namespace MyRomanEmpire.Repositories;
 
-public class TodoRepository
+public class TodoRepository : ITodoRepository
 {
     private readonly List<Todo> _todos = new List<Todo>();
     private int id = 1;
@@ -120,7 +118,7 @@ public class TodoRepository
     {
         return _todos.AsReadOnly();
     }
-    public async void Save()
+    public async Task Save()
     {
         string fileName = "list_of_todos_" + localDate + ".txt";
         string fullPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\" + fileName;
@@ -136,7 +134,7 @@ public class TodoRepository
         }
     }
     
-    public async void UpdateFile()
+    public async Task UpdateFile()
     {
         string fileName = "list_of_todos_" + localDate + ".txt";
         string fullPath = "C:\\zakarian\\pet_projects\\my-roman-empire\\files\\" + fileName;
@@ -151,7 +149,7 @@ public class TodoRepository
         }
     }
     
-    public async void Import(string path)
+    public async Task Import(string path)
     {
         await File.WriteAllTextAsync(localPath, "");
         string[] lines = await File.ReadAllLinesAsync(path);
@@ -174,7 +172,7 @@ public class TodoRepository
         _todos.Clear();
     }
     
-    public async void Export()
+    public async Task Export()
     {
         Console.WriteLine("Under reconstruction...");
     }

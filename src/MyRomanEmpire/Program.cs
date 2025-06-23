@@ -6,17 +6,19 @@ namespace MyRomanEmpire;
 public class Program // слой представления
 {
     //private static readonly TodoRepository repository = new TodoRepository();
-    
+
     public static void Main(string[] args)
     {
-        
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(opt =>
-        {
-        });
-        
+        builder.Services.AddSwaggerGen(opt => { });
+        // builder.Services.AddScoped<ITodoRepository, TodoDbRepository>();
+        // builder.Services.AddSingleton<ITodoRepository, TodoRepository>();
+
+        builder.Services.AddScoped<ITodoRepository>(sp =>
+            TodoRepositoryFactory.GetRepo(new DateTime(2025, 6, 24).DayOfWeek));
+
         var app = builder.Build();
 
         app.UseSwagger();
@@ -26,16 +28,16 @@ public class Program // слой представления
             opt.RoutePrefix = string.Empty;
         });
         app.MapControllers();
-        
+
         app.Run();
-        
+
         /*
         repository.Init();
         repository.Import(repository.localPath);
-        
+
         Console.WriteLine("тудусы приветствуют тебя...");
         Console.WriteLine("если нужна помощь, скажи help...");
-        
+
         while (true)
         {
             Console.WriteLine("что дальше?....");
@@ -44,7 +46,7 @@ public class Program // слой представления
 
             var command = splitedInput[0]; // ToDo: добавить проверку на пустоту //ToDo: добвить проверку на argument out of range
             //var parameters = splitedInput[1]; // ToDo: добавить проверку на пустоту //ToDo: добвить проверку наargument out of range
-            
+
             //Console.WriteLine("Цвет текста");
             //Console.ResetColor();
 
@@ -56,33 +58,33 @@ public class Program // слой представления
                 repository.Create(todo);
                 Console.WriteLine($"да прибудет с нами новый тудус: {todo.Name}...");
                 repository.UpdateFile();
-                
+
             }
             else if(command == "wip")
             {
                 Console.WriteLine("какой тудус?");
-                int.TryParse(Console.ReadLine(), out var currentId); 
+                int.TryParse(Console.ReadLine(), out var currentId);
                 repository.ToInProgressFromNew(currentId);
                 repository.UpdateFile();
             }
             else if(command == "done")
             {
                 Console.WriteLine("какой тудус?");
-                int.TryParse(Console.ReadLine(), out var currentId); 
+                int.TryParse(Console.ReadLine(), out var currentId);
                 repository.Done(currentId);
                 repository.UpdateFile();
             }
             else if(command == "return")
             {
                 Console.WriteLine("какой тудус?");
-                int.TryParse(Console.ReadLine(), out var currentId); 
+                int.TryParse(Console.ReadLine(), out var currentId);
                 repository.ToInProgressFromDone(currentId);
                 repository.UpdateFile();
             }
             else if(command == "reopen")
             {
                 Console.WriteLine("какой тудус?");
-                int.TryParse(Console.ReadLine(), out var currentId); 
+                int.TryParse(Console.ReadLine(), out var currentId);
                 repository.ReOpen(currentId);
                 repository.UpdateFile();
             }
@@ -99,7 +101,7 @@ public class Program // слой представления
             {
                 Console.WriteLine("время переименовать тудус");
                 Console.WriteLine("чей настал черёд?");
-                int.TryParse(Console.ReadLine(), out var currentId); 
+                int.TryParse(Console.ReadLine(), out var currentId);
                 //var name = Console.ReadLine();
                 Console.WriteLine("как его теперь назовём??");
                 var editedName = Console.ReadLine();
@@ -120,17 +122,17 @@ public class Program // слой представления
                 }
                 Console.WriteLine("тудусов много не бывает...");
             }
-            else if(command == "search") 
+            else if(command == "search")
             {
                Console.WriteLine("какой тудус ищем?");
-               string searchName = Console.ReadLine(); 
+               string searchName = Console.ReadLine();
                repository.Search(searchName);
             }
-            else if(command == "filter") 
+            else if(command == "filter")
             {
                 Console.WriteLine($"Существуют следующие статусы: {State.New}, {State.InProgress}, {State.Completed}");
                 Console.WriteLine("на какой статус смотрим?");
-                State.TryParse<State>(Console.ReadLine(), out var filterState); 
+                State.TryParse<State>(Console.ReadLine(), out var filterState);
                 repository.Filter(filterState);
             }
             else if(command == "get")
@@ -158,7 +160,7 @@ public class Program // слой представления
             else if(command == "import")
             {
                 Console.WriteLine("укажи путь к файлу для загрузки");
-                string path = Console.ReadLine(); 
+                string path = Console.ReadLine();
                 repository.Import(path);
                 Console.WriteLine("ура! тудусы из файла загружены!");
             }
@@ -181,7 +183,7 @@ public class Program // слой представления
                 edit - изменить тудус
                 all - просмотреть все тудусы
                 get - просмотреть конкретный тудус
-                save - записать тудусы в файл 
+                save - записать тудусы в файл
                 export - скачать тудусы как пдф
                 f - покинуть матрицу
                 ");
