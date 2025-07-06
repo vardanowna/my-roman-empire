@@ -73,10 +73,10 @@ public class TodoRepository
         }
     }
 
-    public void Search(string searchName)
+    public Todo Search(string searchName)
     {
         var searchResultTodo = _todos.SingleOrDefault(x => x.Name == searchName);
-        Console.WriteLine(searchResultTodo); 
+        return searchResultTodo; 
     }
 
     public void Filter(State state)

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyRomanEmpire.Mappers;
 using MyRomanEmpire.Models;
+using MyRomanEmpire.Models.ApiModels;
 using MyRomanEmpire.Repositories;
 
 namespace MyRomanEmpire.Controllers;
@@ -11,109 +13,138 @@ public class TodoControllers : ControllerBase
     private static readonly TodoRepository repository = new TodoRepository();
 
     [HttpPost("create")]
-    public IActionResult CreateTodo([FromBody] string todosName)
+    public CreateResponse CreateTodo([FromBody] CreateRequest request)
     {
 
-        var name = todosName;
-        var todo = new Todo(name); //ToDO: проверка на пустой ввод и на неуникальное имя
-        repository.Create(todo);
+        var todo = new Todo(request.TodoName); //ToDO: проверка на пустой ввод и на неуникальное имя
+        var id = repository.Create(todo);
         repository.UpdateFile();
 
-        return Ok();
+        return new CreateResponse()
+        {
+            Id = id,
+        };
     }
     
-    [HttpPut("to-in-progress/{todosId}")]
-    public IActionResult ToInProgress([FromBody] string todosId) // может, сразу принимать только int?
+    [HttpPut("to-in-progress")]
+    public ToInProgressResponse ToInProgress([FromBody] ToInProgressRequest request) // может, сразу принимать только int?
     {
-        int.TryParse(todosId, out var currentId); 
-        repository.ToInProgressFromNew(currentId);
+        var id = request.Id;
+        repository.ToInProgressFromNew(id);
         repository.UpdateFile();
 
-        return Ok();
+        return new ToInProgressResponse()
+        {
+            Id = id,
+        }; 
     }
     
-    [HttpPut("to-done/{todosId}")]
-    public IActionResult ToDone([FromBody] string todosId)
+    [HttpPut("to-done")]
+    public ToDoneResponse ToDone([FromBody] ToDoneRequest request)
     {
-        int.TryParse(todosId, out var currentId); 
-        repository.Done(currentId);
+        var id = request.Id; 
+        repository.Done(id);
         repository.UpdateFile();
         
-        return Ok();
+        return new ToDoneResponse()
+        {
+            Id = id,
+        }; 
     }
     
-    [HttpPut("return-to-in-progress/{todosId}")]
-    public IActionResult ReturnToInProgress([FromBody] string todosId)
+    [HttpPut("return-to-in-progress")]
+    public ReturnToInProgressResponse ReturnToInProgress([FromBody] ReturnToInProgressRequest request)
     {
-        int.TryParse(todosId, out var currentId); 
-        repository.ToInProgressFromDone(currentId);
+        var id = request.Id;  
+        repository.ToInProgressFromDone(id);
         repository.UpdateFile();
 
-        return Ok();
+        return new ReturnToInProgressResponse()
+        {
+            Id = id,
+        };
     }
     
-    [HttpPut("reopen/{todosId}")]
-    public IActionResult Reopen([FromBody] string todosId)
+    [HttpPut("reopen")]
+    public ReopenResponse Reopen([FromBody] ReopenRequest request)
     {
-        int.TryParse(todosId, out var currentId); 
-        repository.Reopen(currentId);
+        var id = request.Id;
+        repository.Reopen(id);
         repository.UpdateFile();
 
-        return Ok();
+        return new ReopenResponse()
+        {
+            Id = id,
+        };
     }
     
-    [HttpDelete("burn/{todosId}")]
-    public IActionResult Burn([FromBody] string todosId)
+    [HttpDelete("burn")]
+    public BurnResponse Burn([FromBody] BurnRequest request)
     {
-        int.TryParse(todosId, out var currentId);
-        repository.Burn(currentId); //ToDo: пересчитать id или взять из параллельного списка и смапить
+        var id = request.Id;
+        repository.Burn(id); //ToDo: пересчитать id или взять из параллельного списка и смапить
         // ToDo: добавить обработку нуллового id
         repository.UpdateFile();
 
-        return Ok();
+        return new BurnResponse()
+        {
+            Id = id,
+        };
     }
     
-    [HttpPut("edit/{todosId}")]
-    public IActionResult Edit([FromBody] string todosId, string newName)
+    [HttpPut("edit")]
+    public EditResponse Edit([FromBody] EditRequest request)
     {
-        int.TryParse(todosId, out var currentId);
-        repository.Edit(currentId, newName); // ToDo: добавить обработку нуллового id
+        var id = request.Id;
+        var newName = request.TodoName;
+        repository.Edit(id, newName); // ToDo: добавить обработку нуллового id
         //ToDo: добавить проверку на argument out of range
         repository.UpdateFile();
 
-        return Ok();
+        return new EditResponse()
+        {
+            Id = id,
+        };
     }
     
     [HttpGet("all")]
-    public IActionResult Edit()
+    public GetAllResponse GetAll()
     {
-        foreach (Todo todo in repository.All())
+        var todos = repository.All().ToArray();
+        var response = new GetAllResponse();
+        foreach (var todo in todos)
         {
             if (todo.Status != State.Completed)
             {
-                Console.WriteLine(todo);
+                response.Items.Add(todo.MapToResponse());
             }
         }
 
-        return Ok();
+        return response;
     }
     
     [HttpGet("search/{todosId}")]
-    public IActionResult Search([FromQuery] string searchName)
+    public SearchResponse Search([FromQuery] SearchRequest request)
     {
-        repository.Search(searchName);
+        var id = repository.Search(request.TodoName).Id;
 
-        return Ok();
+        return new SearchResponse()
+        {
+            Id = id,
+        };
     }
     
     [HttpGet("filter/{state}")]
-    public IActionResult Filter([FromQuery] string state)
+    public FilterResponse Filter([FromQuery] FilterRequest request)
     {
         //Существуют следующие статусы: {State.New}, {State.InProgress}, {State.Completed};
-        State.TryParse<State>(state, out var filterState); 
-        repository.Filter(filterState);
+        State state = request.State;
+        repository.Filter(state);
 
-        return Ok();
+        return new FilterResponse() //ToDo: ?
+        {
+
+        };
     }
     
     [HttpGet("get/{todosId}")]
