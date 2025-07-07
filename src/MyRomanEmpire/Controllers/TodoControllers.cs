@@ -123,8 +123,8 @@ public class TodoControllers : ControllerBase
         return response;
     }
     
-    [HttpGet("search/{todosId}")]
-    public SearchResponse Search([FromQuery] SearchRequest request)
+    [HttpGet("search")]
+    public SearchResponse Search([FromBody] SearchRequest request)
     {
         var id = repository.Search(request.TodoName).Id;
 
@@ -134,8 +134,8 @@ public class TodoControllers : ControllerBase
         };
     }
     
-    [HttpGet("filter/{state}")]
-    public FilterResponse Filter([FromQuery] FilterRequest request)
+    [HttpGet("filter")]
+    public FilterResponse Filter([FromBody] FilterRequest request)
     {
         //Существуют следующие статусы: {State.New}, {State.InProgress}, {State.Completed};
         State state = request.State;
@@ -147,43 +147,55 @@ public class TodoControllers : ControllerBase
         };
     }
     
-    [HttpGet("get/{todosId}")]
-    public IActionResult Get([FromBody] string todosId)
+    [HttpGet("get")]
+    public GetResponse Get([FromBody] GetRequest request)
     {
-        int.TryParse(todosId, out var currentId);
-        var currentTodo = repository.Get(currentId);
+        var id = request.Id;
+        var currentTodo = repository.Get(id);
         if (currentTodo == null)
         {
-            return BadRequest();
+            return new GetResponseError()
+            {
+                //ToDo: ?
+            };
         }
         else
-        {
-            return Ok();
-        }
-    }
+            return new GetResponse()
+            {
+                Id = id,
+            };
     
     [HttpPut("save")]
-    public IActionResult Save()
+    public SaveResponse Save()
     {
         repository.Save();
 
-        return Ok();
+        return new SaveResponse()
+        {
+            //ToDo: ?
+        };
     }
     
     [HttpPut("export")]
-    public IActionResult Export()
+    public Exportresponse Export()
     {
         repository.Export();
         
-        return Ok();
+        return new Exportresponse()
+        {
+            //ToDo: ?
+        };
     }
     
     [HttpPut("import")]
-    public IActionResult Import([FromBody] string path)
+    public ImportResponse Import([FromBody] string path)
     {
         repository.Import(path);
 
-        return Ok();
+        return new ImportResponse()
+        {
+            //ToDo: ?
+        };
     }
     
     [HttpGet("f")]

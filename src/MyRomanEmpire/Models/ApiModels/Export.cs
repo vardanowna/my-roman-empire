@@ -1,6 +1,6 @@
 ﻿namespace MyRomanEmpire.Models.ApiModels;
 
-public class Export
+public class Exportresponse
 {
-    
+    //ToDo: ?
 }

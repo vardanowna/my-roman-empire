@@ -1,6 +1,6 @@
 ﻿namespace MyRomanEmpire.Models.ApiModels;
 
-public class Import
+public class ImportResponse
 {
-    
+    //ToDo: ?
 }
