@@ -156,13 +156,13 @@ public class TodoControllers : ControllerBase
         {
             return new GetResponseError()
             {
-                //ToDo: ?
+               Todo = currentTodo
             };
         }
         else
             return new GetResponse()
             {
-                Id = id,
+               
             };
     
     [HttpPut("save")]

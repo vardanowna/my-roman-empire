@@ -8,7 +8,7 @@ public class GetRequest
 
 public class GetResponse
 {
-    public int Id { get; set; }
+    public Todo Todo { get; set; }
 
 }
 
